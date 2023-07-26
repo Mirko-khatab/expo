@@ -3,6 +3,7 @@ import { Platform, uuidv4 } from 'expo-modules-core';
 import { EventEmitter, EventSubscription } from 'fbemitter';
 import invariant from 'invariant';
 
+import { getExpoGoProjectConfig } from '../environment/ExpoGo';
 import getInstallationIdAsync from '../environment/getInstallationIdAsync';
 import LogSerialization from './LogSerialization';
 
@@ -82,8 +83,8 @@ async function _sendRemoteLogsAsync(): Promise<void> {
   // Our current transport policy is to send all of the pending log messages in one batch. If we opt
   // for another policy (ex: throttling) this is where to to implement it.
   const batch = _logQueue.splice(0);
+  const logUrl = getExpoGoProjectConfig()?.logUrl;
 
-  const logUrl = Constants.expoGoConfig?.logUrl;
   if (typeof logUrl !== 'string') {
     throw new Error('The Expo project manifest must specify `logUrl`');
   }
